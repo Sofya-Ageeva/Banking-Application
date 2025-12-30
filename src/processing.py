@@ -1,7 +1,7 @@
 from typing import List, Dict, Any
 
 
-def filter_by_state(filterable_state: list[dict[str, Any]], state: str = "EXECUTED") -> list[dict[str, Any]]:
+def filter_by_state(filterable_state: List[Dict[str, Any]], state: str = "EXECUTED") -> List[Dict[str, Any]]:
     """Функция принимает список словарей и
     возвращает новый словарь со значением по умолчанию"""
 
@@ -12,6 +12,6 @@ def filter_by_state(filterable_state: list[dict[str, Any]], state: str = "EXECUT
     return result
 
 
-def sort_by_date(data: list[dict[str, Any]], reverse: bool = True) -> list[dict[str, Any]]:
+def sort_by_date(data: List[Dict[str, Any]], reverse: bool = True) -> List[Dict[str, Any]]:
     """Сортирует список словарей по дате"""
     return sorted(data, key=lambda x: x["date"], reverse=reverse)

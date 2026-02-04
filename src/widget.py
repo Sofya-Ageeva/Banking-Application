@@ -1,5 +1,6 @@
-from src.masks import get_mask_account, get_mask_card_number
 from datetime import datetime
+
+from src.masks import get_mask_account, get_mask_card_number
 
 
 def mask_account_card(masked_data: str) -> str:
@@ -19,7 +20,7 @@ def mask_account_card(masked_data: str) -> str:
     if not number.isdigit():
         raise ValueError("Номер должен содержать только цифры")
 
-    if parts_type in  ("Счёт", "Счет"):
+    if parts_type in ("Счёт", "Счет"):
         if len(number) < 4:
             raise ValueError("Номер счёта слишком короткий")
         mask_account_number = get_mask_account(number)
@@ -45,7 +46,6 @@ def get_date(formated_date: str) -> str:
         cleaned += "+00:00"
 
     try:
-        from datetime import datetime
         date = datetime.fromisoformat(cleaned)
 
         if not (1 <= date.year <= 9999):

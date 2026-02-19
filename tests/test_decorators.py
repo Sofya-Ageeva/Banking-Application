@@ -1,3 +1,4 @@
+from typing import Iterator, Optional
 import pytest
 from datetime import datetime
 import os
@@ -5,24 +6,26 @@ from src.decorators import log
 
 
 # Вспомогательная функция для проверки содержимого файла
-def read_file_content(filename):
+def read_file_content(filename: str) -> str:
     with open(filename, 'r', encoding='utf-8') as f:
         return f.read()
 
+
 # Очистка файлов после тестов
 @pytest.fixture(autouse=True)
-def cleanup_files():
+def cleanup_files() -> Iterator[None]:
     yield
     # Удаляем созданные файлы после тестов
     for filename in ['mylog.txt', 'test_output.txt']:
         if os.path.exists(filename):
             os.remove(filename)
 
+
 class TestLogDecorator:
-    def test_success_execution_with_filename(self):
+    def test_success_execution_with_filename(self) -> None:
         """Тест: успешное выполнение с записью в файл"""
         @log(filename="mylog.txt")
-        def test_func(x, y):
+        def test_func(x: int, y: int) -> int:
             return x + y
 
         result = test_func(3, 5)
@@ -46,10 +49,10 @@ class TestLogDecorator:
         # Проверяем сообщение функции
         assert "test_func ok Результат: 8" in func_name_line
 
-    def test_success_execution_without_filename(self, capsys):
+    def test_success_execution_without_filename(self, capsys: pytest.CaptureFixture[str]) -> None:
         """Тест: успешное выполнение без filename — вывод в консоль"""
         @log()
-        def test_func(x):
+        def test_func(x: int) -> int:
             return x * 2
 
         result = test_func(4)
@@ -63,10 +66,10 @@ class TestLogDecorator:
         # Проверяем вывод в консоль
         assert "test_func ok Результат: 8" in captured.out
 
-    def test_exception_with_filename(self):
+    def test_exception_with_filename(self) -> None:
         """Тест: исключение с записью в файл"""
         @log(filename="mylog.txt")
-        def problematic_func(x, y):
+        def problematic_func(x: int, y: int) -> float:
             return x / y  # вызовет ZeroDivisionError при y=0
 
         with pytest.raises(ZeroDivisionError):
@@ -88,10 +91,10 @@ class TestLogDecorator:
         assert "problematic_func error: ZeroDivisionError" in error_line
         assert "Inputs: (10, 0), {}" in error_line
 
-    def test_exception_without_filename(self, capsys):
+    def test_exception_without_filename(self, capsys: pytest.CaptureFixture[str]) -> None:
         """Тест: исключение без filename — вывод в консоль"""
         @log()
-        def problematic_func():
+        def problematic_func() -> None:
             raise ValueError("Тестовая ошибка")
 
         with pytest.raises(ValueError):
@@ -104,10 +107,10 @@ class TestLogDecorator:
         assert "problematic_func error: ValueError" in captured.out
         assert "Inputs: (), {}" in captured.out
 
-    def test_function_with_args_and_kwargs(self, capsys):
+    def test_function_with_args_and_kwargs(self, capsys: pytest.CaptureFixture[str]) -> None:
         """Тест: функция с аргументами и kwargs — вывод в консоль"""
         @log()
-        def complex_func(a, b, c=None):
+        def complex_func(a: int, b: int, c: Optional[int] = None) -> int:
             if c:
                 return a + b + c
             return a + b
@@ -119,7 +122,6 @@ class TestLogDecorator:
         assert result1 == 3
         assert result2 == 6
 
-
         # Перехватываем вывод
         captured = capsys.readouterr()
 
@@ -127,10 +129,10 @@ class TestLogDecorator:
         assert "complex_func ok Результат: 3" in captured.out
         assert "complex_func ok Результат: 6" in captured.out
 
-    def test_empty_filename_parameter(self, capsys):
+    def test_empty_filename_parameter(self, capsys: pytest.CaptureFixture[str]) -> None:
         """Тест: filename=None — должен выводить в консоль"""
         @log(filename=None)
-        def simple_func():
+        def simple_func() -> str:
             return "OK"
 
         result = simple_func()
@@ -140,14 +142,14 @@ class TestLogDecorator:
         captured = capsys.readouterr()
         assert "simple_func ok Результат: OK" in captured.out
 
-    def test_file_overwrite_behavior(self):
+    def test_file_overwrite_behavior(self) -> None:
         """Тест: проверка перезаписи файла (режим 'w')"""
         @log(filename="test_output.txt")
-        def func1():
+        def func1() -> int:
             return 1
 
         @log(filename="test_output.txt")
-        def func2():
+        def func2() -> int:
             return 2
 
         # Вызываем функции последовательно
@@ -159,11 +161,10 @@ class TestLogDecorator:
         assert "func1" not in content  # func1 перезаписан
         assert "func2 ok Результат: 2" in content
 
-
-    def test_multiple_calls_same_function(self):
+    def test_multiple_calls_same_function(self) -> None:
         """Тест: многократный вызов одной функции с записью в файл"""
         @log(filename="mylog.txt")
-        def counter(x):
+        def counter(x: int) -> int:
             return x + 1
 
         counter(1)

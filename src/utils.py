@@ -1,9 +1,9 @@
 import json
 import os
-from typing import List, Dict
+from typing import Any, Dict, List
 
 
-def open_json_file(file_path: str) -> List[Dict]:
+def open_json_file(file_path: str) -> List[Dict[str, Any]]:
     """Функция принимает на вход путь до файла с данными о транзакциях
     и возвращает список словарей"""
     if not os.path.exists(file_path):
@@ -17,6 +17,7 @@ def open_json_file(file_path: str) -> List[Dict]:
                 return []
     except (json.JSONDecodeError, UnicodeDecodeError, PermissionError):
         return []
+
 
 test = open_json_file('data/operations.json')
 print(test)

@@ -1,6 +1,7 @@
 import json
-from typing import List, Dict, Any
-from unittest.mock import patch, mock_open, Mock
+from typing import Any, Dict, List
+from unittest.mock import Mock, mock_open, patch
+
 from src.utils import open_json_file
 
 

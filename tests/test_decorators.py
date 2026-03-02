@@ -1,7 +1,9 @@
-from typing import Iterator, Optional
-import pytest
-from datetime import datetime
 import os
+from datetime import datetime
+from typing import Iterator, Optional
+
+import pytest
+
 from src.decorators import log
 
 

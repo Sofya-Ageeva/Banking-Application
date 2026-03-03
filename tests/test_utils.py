@@ -47,7 +47,7 @@ def test_open_json_not_list(mock_file: Mock, mock_exists: Mock) -> None:
 
 @patch('os.path.exists')
 @patch('builtins.open', new_callable=mock_open)
-def test_valid_list_with_mock(mock_file: Mock, mock_exists: Mock) -> None:
+def test_valid_list(mock_file: Mock, mock_exists: Mock) -> None:
     """Тест: валидный JSON‑список → возвращает данные"""
     test_data: List[Dict[str, Any]] = [
         {'id': 1, 'amount': 100},
@@ -68,7 +68,7 @@ def test_valid_list_with_mock(mock_file: Mock, mock_exists: Mock) -> None:
 
 @patch('os.path.exists')
 @patch('builtins.open', new_callable=mock_open)
-def test_json_decode_error_with_mock(mock_file: Mock, mock_exists: Mock) -> None:
+def test_json_decode_error(mock_file: Mock, mock_exists: Mock) -> None:
     """Тест: ошибка декодирования JSON → пустой список"""
     mock_exists.return_value = True
     mock_file.return_value.read.return_value = '{ "invalid": json }'

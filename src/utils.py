@@ -1,5 +1,5 @@
-import json
 import os
+import json
 from typing import Any, Dict, List
 
 
@@ -8,14 +8,18 @@ def open_json_file(file_path: str) -> List[Dict[str, Any]]:
     и возвращает список словарей"""
     if not os.path.exists(file_path):
         return []
+
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             received_data = json.load(f)
-            if len(received_data) != 0 and isinstance(received_data, List):
+
+            if isinstance(received_data, List):
                 return received_data
             else:
                 return []
-    except (json.JSONDecodeError, UnicodeDecodeError, PermissionError):
+    except (json.JSONDecodeError, UnicodeDecodeError, PermissionError,
+            FileNotFoundError) as e:
+        print(f"Ошибка чтения файла {file_path}: {e}")
         return []
 
 

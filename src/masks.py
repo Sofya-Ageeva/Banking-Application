@@ -37,8 +37,8 @@ def get_mask_card_number(card_number: str) -> str:
     return card_number
 
 
-masked_card = get_mask_card_number("1234567890123456")
-print(masked_card)
+# masked_card = get_mask_card_number("1234567890123456")
+# print(masked_card)
 
 
 def get_mask_account(account_number: str) -> str:

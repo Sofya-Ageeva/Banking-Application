@@ -35,5 +35,5 @@ def open_json_file(file_path: str) -> List[Dict[str, Any]]:
         return []
 
 
-test = open_json_file('data/operations.json')
-print(test)
+# test = open_json_file('data/operations.json')
+# print(test)

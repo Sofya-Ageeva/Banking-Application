@@ -84,12 +84,21 @@ def main() -> None:
                 reverse=reverse
             )
 
-    # Фильтрация по валюте (рублёвые)
-    rub_only = input("Выводить только рублёвые транзакции? Да/Нет\n").strip().lower()
+    # Фильтрация по валюте (рублевые)
+    rub_only = input("Выводить только рублевые транзакции? Да/Нет\n").strip().lower()
     if rub_only in ['да', 'yes', 'y']:
         filtered_transactions = [
             t for t in filtered_transactions
-            if 'руб' in t.get('operationAmount', {}).get('currency', {}).get('name', '').lower()
+            if (
+                t.get('operationAmount', {})
+                .get('currency', {})
+                .get('name', '')
+                .upper() == 'RUB'
+                or 'руб' in t.get('operationAmount', {})
+                .get('currency', {})
+                .get('name', '')
+                .lower()
+            )
         ]
 
     # Поиск по описанию
@@ -106,7 +115,7 @@ def main() -> None:
     else:
         print(f"Всего банковских операций в выборке: {len(filtered_transactions)}")
         for i, transaction in enumerate(filtered_transactions, start=1):
-            date = get_date(transaction.get('date', 'N/A'))
+            date = get_date(transaction.get('date', 'N/A')) if 'date' in transaction else 'N/A'
             desc = transaction.get('description', 'N/A')
 
             # Получаем номер счёта/карты из поля 'from' или 'to' и маскируем
@@ -140,7 +149,6 @@ def main() -> None:
             amount = amount_info.get('amount', 'N/A')
             currency_info = amount_info.get('currency', {})
             currency = currency_info.get('name', 'N/A')
-
             print(f"\n{i}. {date} {desc}")
             print(transfer_info)
             print(f"Сумма: {amount} {currency}")
